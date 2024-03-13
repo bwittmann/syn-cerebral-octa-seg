@@ -1,0 +1,77 @@
+### syn_cerebral_octa_seg config file ###
+
+# sim data
+sim_data: synthetic_cerebral_octa
+sim_data_version: b421
+
+# annotated real data
+annotations: manual_annotations
+test_imgs: ['m4_0', 'm78_0', 'm78_1']
+val_imgs: ['m44_1']
+
+# dataloader + general training
+train_on_real: false
+train_img: ['m4_1', 'm44_0']
+experiment_name: syn_cerebral_octa_seg
+device: cuda:0
+
+store_ckpt: true
+epochs: 200
+epochs_decay: 30
+val_interval: 1
+itera_pro_epoch: 50000   # to define len dataset
+seed: 0
+batch_size: 32
+num_workers: 16
+
+# inference
+sliding_window_overlap: 0.5
+sliding_window_mode: 'constant'
+threshold: 0.5
+
+# model
+seg:
+  lr: 1e-5
+  channels: [32, 64, 128, 256, 512]
+  strides: [2, 2, 2, 2]
+  activation: 'LEAKYRELU'
+  normalization: 'BATCH'
+  dropout: 0.3
+  max_norm_clip: 1.0
+
+  cldice: false
+  iter: 15
+  alpha: 0.5
+  smooth: 1
+
+# augmentation
+augmentation:
+  patch_size: [64, 64, 64]
+  use_augmentation: true # use all below listed transforms
+  
+  p_gaussian_noise: 0.5
+  p_gaussian_smooth: 0.5
+  p_intensity_scale: 0
+  p_intensity_shift: 0
+  p_adjust_contrast: 0
+  p_histogram_shift: 0.5
+  p_rotate: 0.5
+  p_zoom: 0.5
+  p_shear: 0
+  p_flip: [0, 0.5, 0.5] # no flip along x axis
+
+  gaussian_noise_mean: 0.0
+  gaussian_noise_std: 0.01
+  gaussian_smooth_sigma: [0.0, 0.5]
+
+  intensity_scale_factors: [-0.5, 1.2]
+  intensity_shift_offsets: [0.05, 0.2]
+
+  adjust_contrast_gamma: [0.7, 1.3]
+
+  control_points: [5, 10]
+
+  rotation: [-90, 90]
+  min_zoom: 1.0
+  max_zoom: 1.2 
+  shear_range: [0.1, 0.1, 0.1]
