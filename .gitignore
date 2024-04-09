@@ -1,0 +1,40 @@
+# Datasets
+*.nii.gz
+*.pkl
+*.npz
+*.npy
+*.json
+*.vtk
+*.csv
+
+# IDE
+.vscode/
+
+# PyCache
+__pycache__/
+*.pyc
+
+# Setup
+*egg-info
+
+# Logging
+*.log
+*.out
+
+# Testing / debugging files
+backup
+vtk_temp
+
+# Data
+dataset
+
+# Runs
+runs
+
+# Torch wheels
+torch*
+
+# C
+*.so
+*.o
+Footer

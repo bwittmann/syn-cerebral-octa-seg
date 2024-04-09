@@ -12,7 +12,7 @@ val_imgs: ['m44_1']
 # dataloader + general training
 train_on_real: false
 train_img: ['m4_1', 'm44_0']
-experiment_name: syn_cerebral_octa_seg
+experiment_name: superunet_syn_base
 device: cuda:0
 
 store_ckpt: true
