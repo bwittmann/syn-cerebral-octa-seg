@@ -102,8 +102,8 @@ def preprocess_image(
         
     # post scale and clip
     if ind_percentile:
-        percentile_lower_post = np.percentile(interpolated_img, 1)
-        percentile_upper_post = np.percentile(interpolated_img, 99)
+        percentile_lower_post = np.percentile(interpolated_img_transformed, 1)
+        percentile_upper_post = np.percentile(interpolated_img_transformed, 99)
 
     transform_post = ScaleIntensityRange(percentile_lower_post, percentile_upper_post, 0, 1, clip=True) # percent [1, 99] of m4 raw (angioTestSet_fullReference_raw_unscaled_m4.tif)
     interpolated_img_transformed = transform_post(interpolated_img_transformed)
