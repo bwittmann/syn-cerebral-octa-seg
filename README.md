@@ -1,6 +1,6 @@
 ## SuperUNet
 
-This branch contains code for the best-performing model & an inference script tailored to our in-house data. Instructions from the `main` branch hold.
+This branch contains code for the best-performing model & an inference script tailored to our in-house data. Ruther, this branch contains code to train with doppler images. Instructions from the `main` branch hold.
 
 ### Inference
 
@@ -20,7 +20,8 @@ Optional arguments:
 
 ### Provided models:
 
-- `superunet_foldx`: ...
-- `superunet_pre_foldx`: ...
-- `superunet_pre_doppler_foldx`: ...
-- `superunet_pre_96_foldx`: ...
+- `superunet_foldx`: SuperUNet trained on fold x
+- `superunet_doppler_foldx`: SuperUNet trained on fold x including Doppler data as additional input channels
+- `superunet_pre_foldx`:  SuperUNet trained on fold x, pre-trained on synthetic data
+- `superunet_pre_intaug_foldx`: SuperUNet trained on fold x, pre-trained on synthetic data, more intensity scale/shift augmentations
+- `superunet_pre_96_foldx`: SuperUNet trained on fold x, pre-trained on synthetic data, with an increased FoV (64 -> 96)
