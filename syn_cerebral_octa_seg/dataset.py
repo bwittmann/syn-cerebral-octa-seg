@@ -19,6 +19,7 @@ class RealDatasetAnnotated(Dataset):
         train_img = config['train_img']
         test_set_folder = Path("./dataset/").resolve() / Path(self._config['annotations'])
         self._data = [torch.tensor(read_nifti(test_set_folder / f'test_set_{img}.nii')) for img in train_img]
+        self._doppler = [torch.tensor(read_nifti(test_set_folder / f'test_set_{img}_inclDopp.nii')) for img in train_img]
         self._label = [torch.tensor(read_nifti(test_set_folder / f'test_set_{img}_label.nii').astype(int)).int() for img in train_img]
         self._modulo = len(self._data)
 
@@ -30,15 +31,21 @@ class RealDatasetAnnotated(Dataset):
 
     def __getitem__(self, idx):
         data_dict = {
-                'image': self._data[idx % self._modulo].clone().detach()[None],
-                'label': self._label[idx % self._modulo].clone().detach()[None]
+            'image': self._data[idx % self._modulo].clone().detach()[None],
+            'doppler': self._doppler[idx % self._modulo].clone().detach().squeeze() if self._config['use_doppler'] else torch.zeros((1, 160, 160, 160)),
+            'label': self._label[idx % self._modulo].clone().detach()[None]
         }
 
         # ensure different augmentation each itera
         self._augmentation.set_random_state(torch.initial_seed() + idx)
         data_transformed = self._augmentation(data_dict)
 
-        return data_transformed['image'].float(), data_transformed['label'].int()
+        if self._config['use_doppler']:
+            img = torch.cat([data_transformed['image'].float(), data_transformed['doppler'].float()])
+        else:
+            img = data_transformed['image'].float()
+
+        return img, data_transformed['label'].int()
 
 
 class TestDataset(Dataset):
@@ -53,6 +60,7 @@ class TestDataset(Dataset):
         # load annotated data + define regions occupied by large and small vessels
         self.m4_0 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_0.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_0_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_0_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 70, 160, 110, 160], [0, 160, 0, 40, 0, 105]],    # new split w/o kissing vessels (breaks cldice)
             'small_region': [[0, 160, 64, 160, 0, 100]],
@@ -61,6 +69,7 @@ class TestDataset(Dataset):
 
         self.m4_1 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_1.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_1_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m4_1_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 0, 100, 110, 160]],
             'small_region': [[0, 160, 40, 140, 0, 110]],
@@ -69,6 +78,7 @@ class TestDataset(Dataset):
 
         self.m78_0 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_0.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_0_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_0_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 0, 120, 115, 160]],
             'small_region': [[0, 160, 0, 150, 0, 110]],
@@ -77,6 +87,7 @@ class TestDataset(Dataset):
 
         self.m78_1 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_1.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_1_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m78_1_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 0, 160, 0, 54]],
             'small_region': [[0, 160, 35, 160, 54, 160]],
@@ -85,6 +96,7 @@ class TestDataset(Dataset):
 
         self.m44_0 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_0.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_0_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_0_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 30, 160, 0, 50]],
             'small_region': [[0, 160, 0, 100, 50, 160]],
@@ -93,6 +105,7 @@ class TestDataset(Dataset):
 
         self.m44_1 = {
             'img': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_1.nii')),
+            'doppler': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_1_inclDopp.nii')),
             'label': torch.tensor(read_nifti(test_set_folder / 'test_set_m44_1_label.nii').astype(int)).int(),
             'large_region': [[0, 160, 0, 130, 120, 160], [0, 160, 105, 150, 0, 125]],
             'small_region': [[0, 160, 0, 105, 0, 95]],
@@ -117,6 +130,7 @@ class TestDataset(Dataset):
 
         data_dict = {
             'image': data['img'].clone().detach()[None],
+            'doppler': data['doppler'].clone().detach().squeeze(),
             'label': data['label'].clone().detach()[None]
         }
 
@@ -124,7 +138,12 @@ class TestDataset(Dataset):
         self._augmentation.set_random_state(torch.initial_seed() + idx)
         data_transformed = self._augmentation(data_dict)
 
-        return data_transformed['image'].float(), data_transformed['label'].int(), small_regions, large_regions, comp_region
+        if self._config['use_doppler']:
+            img = torch.cat([data_transformed['image'].float(), data_transformed['doppler'].float()])
+        else:
+            img = data_transformed['image'].float()
+
+        return img, data_transformed['label'].int(), small_regions, large_regions, comp_region
 
 
 class SimDataset(Dataset):

@@ -30,40 +30,40 @@ def get_transforms_domain_adaptation(data_type, config):
         if config['augmentation']['use_augmentation']:
             transform = [
                 RandSpatialCropd(
-                    keys=['image', 'label'],
+                    keys=['image', 'doppler', 'label'],
                     roi_size=get_patch_size_before_rot(config['augmentation']['patch_size']),
                     random_size=False, random_center=True
                 ),
                 RandRotated(    # Rotation    
-                    keys=['image', 'label'], prob=config['augmentation']['p_rotate'],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_rotate'],
                     range_x=rotate_range, range_y=0, range_z=0,
-                    mode=['bilinear', 'nearest'], padding_mode='zeros'
+                    mode=['bilinear', 'bilinear', 'nearest'], padding_mode='zeros'
                 ),
                 RandZoomd(      # Zoom
-                    keys=['image', 'label'], prob=config['augmentation']['p_zoom'],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_zoom'],
                     min_zoom=config['augmentation']['min_zoom'],
                     max_zoom=config['augmentation']['max_zoom'],
-                    mode=['area', 'nearest'], padding_mode='constant', constant_values=0
+                    mode=['area', 'area', 'nearest'], padding_mode='constant', constant_values=0
                 ),
                 RandAffined(    # Shear
-                    keys=['image', 'label'], prob=config['augmentation']['p_shear'],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_shear'],
                     shear_range=config['augmentation']['shear_range'],
-                    mode=['bilinear', 'nearest'], padding_mode='zeros'
+                    mode=['bilinear', 'bilinear', 'nearest'], padding_mode='zeros'
                 ),
                 RandFlipd(      # Flip axis 0
-                    keys=['image', 'label'], prob=config['augmentation']['p_flip'][0],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][0],
                     spatial_axis=0
                 ),
                 RandFlipd(      # Flip axis 1
-                    keys=['image', 'label'], prob=config['augmentation']['p_flip'][1],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][1],
                     spatial_axis=1
                 ),
                 RandFlipd(      # Flip axis 2
-                    keys=['image', 'label'], prob=config['augmentation']['p_flip'][2],
+                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][2],
                     spatial_axis=2
                 ),
                 RandSpatialCropd(
-                    keys=['image', 'label'],
+                    keys=['image', 'doppler', 'label'],
                     roi_size=config['augmentation']['patch_size'],
                     random_size=False, #random_center=True
                 ),
@@ -106,19 +106,19 @@ def get_transforms_domain_adaptation(data_type, config):
                 
                 # Disable meta tracking for faster training
                 EnsureTyped(
-                    keys=['image', 'label'], track_meta=False,
+                    keys=['image', 'doppler', 'label'], track_meta=False,
                     # device=config['device']
                 )
             ]
         else:
             transform = [
                 RandSpatialCropd(
-                    keys=['image', 'label'],
+                    keys=['image', 'doppler', 'label'],
                     roi_size=config['augmentation']['patch_size'],
                     random_size=False
                 ),
                 EnsureTyped(
-                    keys=['image', 'label'], track_meta=False,
+                    keys=['image', 'doppler', 'label'], track_meta=False,
                     # device=config['device']
                 )
             ]

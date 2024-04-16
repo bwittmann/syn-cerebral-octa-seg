@@ -115,8 +115,9 @@ class OCTASegNet3D(nn.Module):
         self._config = config
 
         # load individual models
+        in_channels = 4 if self._config['use_doppler'] else 1
         self._segmenter = UNet(
-            spatial_dims=3, in_channels=1, out_channels=1,
+            spatial_dims=3, in_channels=in_channels, out_channels=1,
             channels=self._config['seg']['channels'], strides=self._config['seg']['strides'],
             act=self._config['seg']['activation'], norm=self._config['seg']['normalization'], 
             dropout=self._config['seg']['dropout']
