@@ -32,9 +32,11 @@ class RealDatasetAnnotated(Dataset):
     def __getitem__(self, idx):
         data_dict = {
             'image': self._data[idx % self._modulo].clone().detach()[None],
-            'doppler': self._doppler[idx % self._modulo].clone().detach().squeeze() if self._config['use_doppler'] else torch.zeros((1, 160, 160, 160)),
             'label': self._label[idx % self._modulo].clone().detach()[None]
         }
+
+        if self._config['use_doppler']:
+            data_dict['doppler'] = self._doppler[idx % self._modulo].clone().detach().squeeze()
 
         # ensure different augmentation each itera
         self._augmentation.set_random_state(torch.initial_seed() + idx)
@@ -130,9 +132,11 @@ class TestDataset(Dataset):
 
         data_dict = {
             'image': data['img'].clone().detach()[None],
-            'doppler': data['doppler'].clone().detach().squeeze(),
             'label': data['label'].clone().detach()[None]
         }
+
+        if self._config['use_doppler']:
+            data_dict['doppler'] = data['doppler'].clone().detach().squeeze()
 
         # ensure different augmentation each itera
         self._augmentation.set_random_state(torch.initial_seed() + idx)

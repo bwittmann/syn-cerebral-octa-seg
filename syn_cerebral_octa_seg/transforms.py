@@ -25,45 +25,49 @@ def get_patch_size_before_rot(patch_size):
 
 def get_transforms_domain_adaptation(data_type, config):
     rotate_range = [i / 180 * np.pi for i in config['augmentation']['rotation']]
+
+    keys_ = ['image', 'doppler', 'label'] if config['use_doppler'] else ['image', 'label']
+    mode_rot = ['bilinear', 'bilinear', 'nearest'] if config['use_doppler'] else ['bilinear', 'nearest']
+    mode_zoom = ['area', 'area', 'nearest'] if config['use_doppler'] else ['area', 'nearest']
     
     if data_type in ['sim', 'real']:
         if config['augmentation']['use_augmentation']:
             transform = [
                 RandSpatialCropd(
-                    keys=['image', 'doppler', 'label'],
+                    keys=keys_,
                     roi_size=get_patch_size_before_rot(config['augmentation']['patch_size']),
                     random_size=False, random_center=True
                 ),
                 RandRotated(    # Rotation    
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_rotate'],
+                    keys=keys_, prob=config['augmentation']['p_rotate'],
                     range_x=rotate_range, range_y=0, range_z=0,
-                    mode=['bilinear', 'bilinear', 'nearest'], padding_mode='zeros'
+                    mode=mode_rot, padding_mode='zeros'
                 ),
                 RandZoomd(      # Zoom
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_zoom'],
+                    keys=keys_, prob=config['augmentation']['p_zoom'],
                     min_zoom=config['augmentation']['min_zoom'],
                     max_zoom=config['augmentation']['max_zoom'],
-                    mode=['area', 'area', 'nearest'], padding_mode='constant', constant_values=0
+                    mode=mode_zoom, padding_mode='constant', constant_values=0
                 ),
                 RandAffined(    # Shear
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_shear'],
+                    keys=keys_, prob=config['augmentation']['p_shear'],
                     shear_range=config['augmentation']['shear_range'],
-                    mode=['bilinear', 'bilinear', 'nearest'], padding_mode='zeros'
+                    mode=mode_rot, padding_mode='zeros'
                 ),
                 RandFlipd(      # Flip axis 0
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][0],
+                    keys=keys_, prob=config['augmentation']['p_flip'][0],
                     spatial_axis=0
                 ),
                 RandFlipd(      # Flip axis 1
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][1],
+                    keys=keys_, prob=config['augmentation']['p_flip'][1],
                     spatial_axis=1
                 ),
                 RandFlipd(      # Flip axis 2
-                    keys=['image', 'doppler', 'label'], prob=config['augmentation']['p_flip'][2],
+                    keys=keys_, prob=config['augmentation']['p_flip'][2],
                     spatial_axis=2
                 ),
                 RandSpatialCropd(
-                    keys=['image', 'doppler', 'label'],
+                    keys=keys_,
                     roi_size=config['augmentation']['patch_size'],
                     random_size=False, #random_center=True
                 ),
@@ -106,19 +110,19 @@ def get_transforms_domain_adaptation(data_type, config):
                 
                 # Disable meta tracking for faster training
                 EnsureTyped(
-                    keys=['image', 'doppler', 'label'], track_meta=False,
+                    keys=keys_, track_meta=False,
                     # device=config['device']
                 )
             ]
         else:
             transform = [
                 RandSpatialCropd(
-                    keys=['image', 'doppler', 'label'],
+                    keys=keys_,
                     roi_size=config['augmentation']['patch_size'],
                     random_size=False
                 ),
                 EnsureTyped(
-                    keys=['image', 'doppler', 'label'], track_meta=False,
+                    keys=keys_, track_meta=False,
                     # device=config['device']
                 )
             ]
