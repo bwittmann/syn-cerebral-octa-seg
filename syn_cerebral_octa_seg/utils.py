@@ -56,8 +56,8 @@ def normalize_np(np_array):
     np_array *= (1.0/np_array.max())
     return np_array
 
-def get_config():
-    with open(PATH_TO_CONFIG / 'config.yaml', 'r') as stream:
+def get_config(config_name):
+    with open(PATH_TO_CONFIG / f'{config_name}.yaml', 'r') as stream:
         config = yaml.safe_load(stream)
     return config
 

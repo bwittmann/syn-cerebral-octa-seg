@@ -4,7 +4,7 @@ This branch contains code for the best-performing model & an inference script ta
 
 ### Inference
 
-    python syn_cerebral_octa_seg/inference.py --run superunet_fold0 --data_folder <folder_to_raw_tif_files>
+    python syn_cerebral_octa_seg/inference.py --run superunet_fold0 --data_folder <folder_to_raw_tif_files> --ensemble --ind_per
 
 The `<folder_to_raw_tif_files>` should contain raw .tif files. Preprocessing is done in the inference script.
 For a selection of models, please see below.

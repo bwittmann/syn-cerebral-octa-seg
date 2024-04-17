@@ -84,9 +84,10 @@ if __name__ == "__main__":
     parser.add_argument("--resume", type=str, help="Path to checkpoint to use.", default=None)
     parser.add_argument('--pre_train', action='store_true', help='Use solely weights.')
     parser.add_argument("--path_to_runs", type=str, help="Path to runs dir.", default='')
+    parser.add_argument("--config", type=str, help="Name of the config to use.", default='config')
 
     args = parser.parse_args()
-    config = get_config()
+    config = get_config(args.config)
 
     # to get reproducable results
     torch.manual_seed(config['seed'])
