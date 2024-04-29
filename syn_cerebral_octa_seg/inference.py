@@ -7,18 +7,15 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 from scipy.ndimage import median_filter
-from tqdm import tqdm
 from torch.cuda.amp import autocast
 from monai.inferers import sliding_window_inference
 from monai.transforms import ScaleIntensityRange
 
-from syn_cerebral_octa_seg.utils import read_json, write_nifti, read_nifti, read_tiff
+from syn_cerebral_octa_seg.utils import read_json, write_nifti, read_tiff
 from syn_cerebral_octa_seg.models import get_model
 
 
 def inference(args):
-    path_to_run = Path('./runs/' + args.run)
-
     args_modifier = args.run    # for logging purposes
     if args.last:
         args_modifier += '_last'
@@ -27,54 +24,75 @@ def inference(args):
     if args.ensemble:
         args_modifier += '_ensemble'
 
-    device = torch.device('cpu') if args.cpu else torch.device('cuda:' + str(args.num_gpu))
-    config = read_json(path_to_run / 'config.json')
-
-    # get path to checkpoints
-    avail_checkpoints = [path for path in path_to_run.iterdir() if 'model_' in str(path)]
-    avail_checkpoints.sort(key=lambda x: len(str(x)))
-    if args.last:
-        path_to_ckpt = avail_checkpoints[0]
+    if args.ensemble:
+        runs = [
+            'superunet_fold0_pre', 'superunet_fold1_pre', 'superunet_fold2_pre',
+            'superunet_fold3_pre', 'superunet_fold4_pre', 'superunet_fold5_pre'
+        ]
+        path_to_runs = [Path('./runs/' + run) for run in runs]
     else:
-        path_to_ckpt = avail_checkpoints[-1]
+        path_to_runs = [Path('./runs/' + args.run)]
 
-    # load model and checkpoint
-    def lr_schedule(step):
-        if step < (config['epochs'] - config['epochs_decay']):
-            return 1
-        else:
-            return (config['epochs'] - step) * (1 / max(1, config['epochs_decay']))
-        
-    model = get_model(config, lr_schedule).to(device=device) 
-    checkpoint = torch.load(path_to_ckpt, map_location=device)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    model.eval()
+    device = torch.device('cpu') if args.cpu else torch.device('cuda:' + str(args.num_gpu))
 
     # load raw data
     files = [file for file in Path(args.data_folder).glob('**/*') if file.is_file() and file.suffix in ['.tif']]
 
-    # perform inference
+    # loop over files
     for file in files:
-        print(f'Processing {file}')
-        data = read_tiff(file).astype(np.float32)
+        preds = []
 
         # transform data
+        print(f'Processing {file}')
+        data = read_tiff(file).astype(np.float32)
         data = preprocess_image(data, ind_percentile=args.ind_per)[None][None].to(device=device)
 
-        # make prediction
-        with torch.no_grad():
-            with autocast():
-                out = sliding_window_inference(
-                    inputs=data,
-                    roi_size=config['augmentation']['patch_size'],
-                    sw_batch_size=config['batch_size'],
-                    predictor=model,
-                    overlap=args.overlap,
-                    mode=config['sliding_window_mode'],
-                    padding_mode='constant',
-                    progress=True,
-                    inference=True
-                )
+        # loop over models
+        for run in path_to_runs:
+            config = read_json(run / 'config.json')
+
+            # get path to checkpoints
+            avail_checkpoints = [path for path in run.iterdir() if 'model_' in str(path)]
+            avail_checkpoints.sort(key=lambda x: len(str(x)))
+            if args.last:
+                path_to_ckpt = avail_checkpoints[0]
+            else:
+                path_to_ckpt = avail_checkpoints[-1]
+
+            # load model and checkpoint
+            def lr_schedule(step):
+                if step < (config['epochs'] - config['epochs_decay']):
+                    return 1
+                else:
+                    return (config['epochs'] - step) * (1 / max(1, config['epochs_decay']))
+                
+            model = get_model(config, lr_schedule).to(device=device) 
+            checkpoint = torch.load(path_to_ckpt, map_location=device)
+            model.load_state_dict(checkpoint['model_state_dict'])
+            model.eval()
+
+            # make prediction
+            with torch.no_grad():
+                with autocast():
+                    out = sliding_window_inference(
+                        inputs=data,
+                        roi_size=config['augmentation']['patch_size'],
+                        sw_batch_size=config['batch_size'],
+                        predictor=model,
+                        overlap=args.overlap,
+                        mode=config['sliding_window_mode'],
+                        padding_mode='constant',
+                        progress=True,
+                        inference=True
+                    )
+
+            preds.append(out.squeeze())
+
+        # average over outputs
+        try:
+            out = torch.stack(preds).mean(0)
+        except:
+            out = preds[0]
 
         # save segmentation masks
         write_nifti((out >= args.threshold).int().squeeze().cpu().numpy(), args.data_folder / Path(file.parts[-1].split('.')[0] + '_' + args_modifier + '_seg.nii'))
@@ -119,7 +137,7 @@ if __name__ == "__main__":
     parser.add_argument('--run', required=True, type=str, help='Name of experiment in syn_cerebral_octa_seg/runs.')
     parser.add_argument('--num_gpu', type=int, default=0, help='Id of GPU to run inference on.')
     parser.add_argument('--threshold', type=float, default=0.5, help='Threshold for foreground voxels.')
-    parser.add_argument('--overlap', type=float, default=0.8, help='Overlap in sliding window inference scheme.')
+    parser.add_argument('--overlap', type=float, default=0.9, help='Overlap in sliding window inference scheme.')
     parser.add_argument('--last', action='store_true', help='Use model_last instead of model_best.')
     parser.add_argument('--cpu', action='store_true', help='Utilize cpu.')
     parser.add_argument('--ind_per', action='store_true', help='Estimate for each image an individual percentile value.')

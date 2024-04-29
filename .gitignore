@@ -29,6 +29,7 @@ vtk_temp
 dataset
 
 # Runs
+runs
 
 # Torch wheels
 torch*
