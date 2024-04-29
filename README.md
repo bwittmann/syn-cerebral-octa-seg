@@ -34,11 +34,11 @@ Optional arguments:
 5. `--ensemble`: Aktivate 6-fold ensemble inference strategy; just for `superunet_foldx_pre`
 5. `--doppler`: TODO
 
-### Provided models:
+### Provided Models
 For a selection of models, please see below.
 
 - `superunet_foldx`: SuperUNet trained on fold x
-- `superunet_foldx_crop96`: SuperUNet trained on fold x, pre-trained on synthetic data, with an increased FoV (64 -> 96)
-- `superunet_foldx_intaug`: SuperUNet trained on fold x, pre-trained on synthetic data, more intensity scale/shift augmentations
-- `superunet_foldx_pre`:  SuperUNet trained on fold x, pre-trained on synthetic data
+- `superunet_foldx_crop96`: SuperUNet trained on fold x with an increased FoV (64 -> 96)
+- `superunet_foldx_intaug`: SuperUNet trained on fold x with more intensity scale/shift augmentations
+- `superunet_foldx_pre`:  SuperUNet trained on fold x pre-trained on synthetic data
 - `superunet_foldx_doppler`: TODO <!-- SuperUNet trained on fold x including Doppler data as additional input channels -->
