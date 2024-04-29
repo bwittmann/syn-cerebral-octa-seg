@@ -3,7 +3,7 @@
 *.pkl
 *.npz
 *.npy
-*.json
+# *.json
 *.vtk
 *.csv
 
@@ -29,7 +29,6 @@ vtk_temp
 dataset
 
 # Runs
-runs
 
 # Torch wheels
 torch*

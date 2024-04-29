@@ -1,6 +1,12 @@
 ## SuperUNet
 
-This branch contains code for the best-performing model & an inference script tailored to our in-house data. Ruther, this branch contains code to train with doppler images. Instructions from the `main` branch hold.
+This branch contains code for the best-performing model & an inference script tailored to our in-house data. Futher, this branch contains code to train with doppler images. Instructions from the `main` branch hold.
+
+### Setup
+
+Make sure to have Git LFS installed to have access to checkpoints:
+
+    git lfs install
 
 ### Inference
 
@@ -21,7 +27,7 @@ Optional arguments:
 ### Provided models:
 
 - `superunet_foldx`: SuperUNet trained on fold x
-- `superunet_doppler_foldx`: SuperUNet trained on fold x including Doppler data as additional input channels
-- `superunet_pre_foldx`:  SuperUNet trained on fold x, pre-trained on synthetic data
-- `superunet_pre_intaug_foldx`: SuperUNet trained on fold x, pre-trained on synthetic data, more intensity scale/shift augmentations
-- `superunet_pre_96_foldx`: SuperUNet trained on fold x, pre-trained on synthetic data, with an increased FoV (64 -> 96)
+- `superunet_foldx_doppler`: SuperUNet trained on fold x including Doppler data as additional input channels
+- `superunet_foldx_crop96`: SuperUNet trained on fold x, pre-trained on synthetic data, with an increased FoV (64 -> 96)
+- `superunet_foldx_intaug`: SuperUNet trained on fold x, pre-trained on synthetic data, more intensity scale/shift augmentations
+- `superunet_foldx_pre`:  SuperUNet trained on fold x, pre-trained on synthetic data
