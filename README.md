@@ -6,6 +6,9 @@
 
 Our work is described in detail in our manuscript ([Simulation-Based Segmentation of Blood Vessels in Cerebral 3D OCTA Images](https://arxiv.org/abs/2403.07116)).
 
+### Updates:
+**June 24**: Added `patch_sampling.py` to provide additional information on patch sampling.
+
 
 ## 🟢 Installation
 
