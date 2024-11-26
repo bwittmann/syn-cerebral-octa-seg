@@ -91,12 +91,12 @@ Results can be accessed in `<name of experiment in ./runs folder>`.
 
 If you find our work useful for your research, please consider citing our manuscript:
 ```bibtex
-@misc{wittmann2024simulationbased,
-      title={Simulation-Based Segmentation of Blood Vessels in Cerebral 3D OCTA Images}, 
-      author={Bastian Wittmann and Lukas Glandorf and Johannes C. Paetzold and Tamaz Amiranashvili and Thomas Wälchli and Daniel Razansky and Bjoern Menze},
-      year={2024},
-      eprint={2403.07116},
-      archivePrefix={arXiv},
-      primaryClass={eess.IV}
+@inproceedings{wittmann2024simulation,
+  title={Simulation-based segmentation of blood vessels in cerebral 3D OCTA images},
+  author={Wittmann, Bastian and Glandorf, Lukas and Paetzold, Johannes C and Amiranashvili, Tamaz and W{\"a}lchli, Thomas and Razansky, Daniel and Menze, Bjoern},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={645--655},
+  year={2024},
+  organization={Springer}
 }
 ```
