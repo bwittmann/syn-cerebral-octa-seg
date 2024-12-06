@@ -43,7 +43,7 @@ dataset/
     └── mx_0_label.nii              # ground truth (manual annotations) 
         ...
 └── synthetic_cerebral_octa/
-    └── axxxx_0/
+    └── sample_0/
         └── sim/
             └── sim_data_xx.npy     # synthetic cerebral 3D OCTA image
             └── sim_seg_xx.npy      # ground truth
@@ -51,7 +51,7 @@ dataset/
         └── occ.npy                 # metadata occupancy below
         └── rad.npy                 # metadata radius
         └── seg.npy                 # voxelized volume
-    └── axxxx_1/
+    └── sample_1/
         ...   
 ```
 
