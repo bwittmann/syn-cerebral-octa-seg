@@ -26,8 +26,8 @@ def inference(args):
 
     if args.ensemble:
         runs = [
-            'superunet_fold0_pre', 'superunet_fold1_pre', 'superunet_fold2_pre',
-            'superunet_fold3_pre', 'superunet_fold4_pre', 'superunet_fold5_pre'
+            'model_fold0_pre', 'model_fold1_pre', 'model_fold2_pre',
+            'model_fold3_pre', 'model_fold4_pre', 'model_fold5_pre'
         ]
         path_to_runs = [Path('./runs/' + run) for run in runs]
     else:

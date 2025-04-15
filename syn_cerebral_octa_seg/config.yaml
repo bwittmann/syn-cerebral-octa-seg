@@ -13,7 +13,7 @@ val_imgs: ['m4_0']
 train_on_real: true
 use_doppler: false
 train_img: ['m4_1', 'm44_0', 'm44_1', 'm78_0', 'm78_1']
-experiment_name: superunet_fold0
+experiment_name: model_fold0
 device: cuda:0
 
 store_ckpt: true
