@@ -1,7 +1,7 @@
 ## OCTA-UNet++
 
 This branch contains code for the best-performing model & an inference script tailored to our in-house data. Instructions from the `main` branch hold.
-OCTA-UNet++ was utilized in the manuscript "In Vivo Network-Level Cerebrovascular Mapping Reveals the Effects of Flow Topology on Capillary Stalls After Stroke."
+OCTA-UNet++ was utilized in the manuscript "**In Vivo Network-Level Cerebrovascular Mapping Reveals the Effects of Flow Topology on Capillary Stalls After Stroke**."
 <!-- Further, this branch contains code to train with doppler images.  -->
 
 ### Setup
@@ -12,7 +12,7 @@ Make sure to have Git LFS installed to download the checkpoints:
 
 Download checkpoints:
 
-    git clone https://huggingface.co/bwittmann/octa-unetplusplus
+    git clone git@hf.co:bwittmann/octa-unetplusplus
 
 and put them into the `./runs` folder. The structure should follow:
 
