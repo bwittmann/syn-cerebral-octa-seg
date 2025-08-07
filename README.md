@@ -2,7 +2,7 @@
 
 This branch contains code for the best-performing model & an inference script tailored to our in-house data. Instructions from the `main` branch hold.
 OCTA-UNet++ was utilized in the manuscript "**In Vivo Network-Level Cerebrovascular Mapping Reveals the Impact of Flow Topology on Capillary Stalls After Stroke**", available at:
-[https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract](https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract)
+[https://www.biorxiv.org/](https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract)
 
 <!-- Further, this branch contains code to train with doppler images.  -->
 
