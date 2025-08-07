@@ -5,8 +5,15 @@ OCTA-UNet++ was utilized in the manuscript "**In Vivo Network-Level Cerebrovascu
 [https://www.biorxiv.org/](https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract)
 
 <!-- Further, this branch contains code to train with doppler images.  -->
+### System requirements
+All software dependencies are handled through `setup.py`.
+The code should run on Windows (10/11), Mac (macOS 15 Sequoia) & Linux (Ubuntu/Arch) operating systems. 
+The code has been tested on up-to-date Arch Linux (June 2025) running linux-lts 6.12.
+While the inference code can run on a CPU, this was not tested and we strongly recommend using an up-to-date Nvidia GPU (at least 2 GB VRAM).
+
 
 ### Setup
+(Approx. 1h)
 
 Make sure to have Git LFS installed to download the checkpoints:
 
