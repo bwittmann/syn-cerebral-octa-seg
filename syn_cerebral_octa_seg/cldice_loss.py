@@ -1,4 +1,8 @@
-"""Code for clDice loss function."""
+"""
+Code for clDice loss function.
+This code is © Copyright (c) 2021 Johannes C. Paetzold and Suprosanna Shit and licensed under the MIT License. 
+See https://github.com/jocpae/clDice/blob/master/LICENSE for details.
+"""
 
 import torch
 import torch.nn as nn

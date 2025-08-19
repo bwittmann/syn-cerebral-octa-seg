@@ -1,4 +1,8 @@
-"""File containing model related functionality."""
+"""
+File containing model related functionality.
+Parts of this code are © Copyright (c) 2021 Johannes C. Paetzold and Suprosanna Shit and licensed under the MIT License. 
+See https://github.com/jocpae/clDice/blob/master/LICENSE for details.
+"""
 
 from collections import defaultdict
 

@@ -3,17 +3,16 @@
 This branch contains code for the best-performing model & an inference script tailored to our in-house data. Instructions from the `main` branch hold.
 OCTA-UNet++ was utilized in the manuscript "**In Vivo Network-Level Cerebrovascular Mapping Reveals the Impact of Flow Topology on Capillary Stalls After Stroke**", available at:
 [https://www.biorxiv.org/](https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract)
-
 <!-- Further, this branch contains code to train with doppler images.  -->
+
 ### System requirements
 All software dependencies are handled through `setup.py`.
-The code should run on Windows (10/11), Mac (macOS 15 Sequoia) & Linux (Ubuntu/Arch) operating systems. 
+The code should run on Windows (10/11), Mac (macOS 15 Sequoia), & Linux (Ubuntu/Arch) operating systems. 
 The code has been tested on up-to-date Arch Linux (June 2025) running linux-lts 6.12.
 While the inference code can run on a CPU, this was not tested and we strongly recommend using an up-to-date Nvidia GPU (at least 2 GB VRAM).
 
 
-### Setup
-(Approx. 1h)
+### Setup (approx. 1h)
 
 Make sure to have Git LFS installed to download the checkpoints:
 
@@ -53,3 +52,6 @@ For a selection of models, please see below.
 - `model_foldx_intaug`: Model trained on fold x with more intensity scale/shift augmentations
 - `model_foldx_pre`:  Model trained on fold x, pre-trained on synthetic data
 <!-- - `model_foldx_doppler`: Model trained on fold x including Doppler data as additional input channels -->
+
+### License
+OCTA-UNet++'s code on this branch is licensed under the MIT License.
