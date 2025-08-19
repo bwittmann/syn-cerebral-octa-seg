@@ -1,6 +1,6 @@
 ## OCTA-UNet++
 
-This branch contains code for the best-performing model & an inference script tailored to our in-house data. Instructions from the `main` branch hold.
+This branch contains code including the inference pipeline for OCTA-UNet++, the best-performing model tailored to our in-house data.
 OCTA-UNet++ was utilized in the manuscript "**In Vivo Network-Level Cerebrovascular Mapping Reveals the Impact of Flow Topology on Capillary Stalls After Stroke**", available at:
 [https://www.biorxiv.org/](https://www.biorxiv.org/content/10.1101/2025.07.28.667165v1.abstract)
 <!-- Further, this branch contains code to train with doppler images.  -->
@@ -11,14 +11,12 @@ The code should run on Windows (10/11), Mac (macOS 15 Sequoia), & Linux (Ubuntu/
 The code has been tested on up-to-date Arch Linux (June 2025) running linux-lts 6.12.
 While the inference code can run on a CPU, this was not tested and we strongly recommend using an up-to-date Nvidia GPU (at least 2 GB VRAM).
 
-
 ### Setup (approx. 1h)
-
-Make sure to have Git LFS installed to download the checkpoints:
+Make sure to have Git LFS installed to download the model checkpoints:
 
     git lfs install
 
-Download checkpoints:
+Download model checkpoints:
 
     git clone git@hf.co:bwittmann/octa-unetplusplus
 
@@ -33,9 +31,9 @@ and put them into the `./runs` folder. The structure should follow:
 
     python syn_cerebral_octa_seg/inference.py --run model_fold0_pre --data_folder <folder_to_raw_tif_files> --ensemble
 
-The `<folder_to_raw_tif_files>` should contain raw .tif files. Preprocessing is done in the inference script.
+The `<folder_to_raw_tif_files>` should contain raw .tif files. Preprocessing is done directly in the inference script.
 
-Optional arguments: 
+Optional arguments:
 
 1. `--overlap`: Overlap of tiles in sliding window inference scheme
 2. `--last`: Use checkpoint `last` instead of `best`
